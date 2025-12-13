@@ -1,4 +1,8 @@
 using backend.Models;
+using backend.Repository.Implementation;
+using backend.Repository.Interface;
+using backend.Services;
+using backend.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<TodoDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TodoDb"))
 );
+
+builder.Services.AddScoped<IJwtService, JwtService>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
