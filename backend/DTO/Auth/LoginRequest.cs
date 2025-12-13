@@ -2,12 +2,8 @@
 
 namespace backend.DTO.Auth
 {
-    public class RegisterRequest
+    public class LoginRequest
     {
-        [Required(ErrorMessage = "Name is required")]
-        [MaxLength(100, ErrorMessage = "Name cannot exceed 100 characters")]
-        public string Name { get; set; } = "";
-
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Incorrect email format")]
         [MaxLength(150, ErrorMessage = "Email cannot exceed 150 characters")]

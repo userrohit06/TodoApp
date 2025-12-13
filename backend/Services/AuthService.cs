@@ -9,10 +9,74 @@ namespace backend.Services
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepo;
+        private readonly IJwtService _jwtService;
 
-        public AuthService(IUserRepository userRepository)
+        public AuthService(IUserRepository userRepository, IJwtService jwtService)
         {
             this._userRepo = userRepository;
+            this._jwtService = jwtService;
+        }
+
+        public async Task<ApiResponse<AuthResponse>> Login(LoginRequest request)
+        {
+            var response = new ApiResponse<AuthResponse>();
+
+            try
+            {
+                if (request == null)
+                {
+                    response.Status = 400;
+                    response.Message = "Request cannot be null";
+                    return response;
+                }
+
+                if (string.IsNullOrWhiteSpace(request.Email) ||
+                   string.IsNullOrWhiteSpace(request.Password))
+                {
+                    response.Status = 400;
+                    response.Message = "Email and password are required";
+                    return response;
+                }
+
+                var user = await this._userRepo.GetUserByEmailAsync(request.Email);
+                if(user == null)
+                {
+                    response.Status = 401;
+                    response.Message = "Invalid email or password";
+                    return response;
+                }
+
+                var isPasswordMatch = BCrypt.Net.BCrypt.Verify(request.Password, user.HashedPassword);
+                if (!isPasswordMatch)
+                {
+                    response.Status = 401;
+                    response.Message = "Invalid email or password";
+                    return response;
+                }
+
+                var token = this._jwtService.GenerateToken(user);
+
+                var authResponse = new AuthResponse
+                {
+                    UserId = user.UserId,
+                    Name = user.FullName,
+                    Email = user.Email,
+                    CreatedOn = user.CreatedOn,
+                    Token = token,
+                    IsActive = user.IsActive
+                };
+
+                response.Status = 200;
+                response.Message = "User login successful";
+                response.Data = authResponse;
+                return response;
+            }
+            catch (Exception)
+            {
+                response.Status = 500;
+                response.Message = "Unexpected error occured while user login";
+                return response;
+            }
         }
 
         public async Task<ApiResponse<AuthResponse>> Register(RegisterRequest request)
@@ -33,7 +97,7 @@ namespace backend.Services
                    string.IsNullOrWhiteSpace(request.Password))
                 {
                     response.Status = 400;
-                    response.Message = "Name, email are password are required";
+                    response.Message = "Name, email and password are required";
                     return response;
                 }
 
@@ -55,7 +119,8 @@ namespace backend.Services
                     FullName = request.Name,
                     Email = request.Email,
                     HashedPassword = hashedPassword,
-                    CreatedOn = DateTime.Now
+                    CreatedOn = DateTime.Now,
+                    IsActive = true
                 };
 
                 await this._userRepo.AddUserAsync(newUser);
