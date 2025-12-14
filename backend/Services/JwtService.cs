@@ -30,7 +30,7 @@ namespace backend.Services
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddMinutes(double.Parse(this._configuration["Jwt:ExpireMinutes" ?? "60"])),
-                Issuer = this._configuration["Jet:Issuer"],
+                Issuer = this._configuration["Jwt:Issuer"],
                 Audience = this._configuration["Jwt:Audience"],
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
