@@ -1,1 +1,37 @@
-<p>todo-list works!</p>
+<div
+  class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800"
+>
+  <div class="mb-4 flex items-center justify-between">
+    <h2 class="text-lg font-semibold">Your todos</h2>
+    <a
+      routerLink="/todos/create"
+      class="inline-flex items-center rounded-full bg-indigo-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-indigo-600"
+    >
+      + New Todo
+    </a>
+  </div>
+
+  <div *ngIf="isLoading">Loading...</div>
+  <div *ngIf="error" class="text-sm text-red-500">{{ error }}</div>
+
+  <ul *ngIf="!isLoading && !error && todos.length" class="space-y-3">
+    <li
+      *ngFor="let todo of todos"
+      class="flex items-start justify-between rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900"
+    >
+      <div>
+        <h3
+          class="text-sm font-medium"
+          [class.line-through]="todo.isCompleted"
+          [class.text-slate-400]="todo.isCompleted"
+        >
+          {{ todo.title }}
+        </h3>
+
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+          {{ todo.description || 'No Description' }}
+        </p>
+      </div>
+    </li>
+  </ul>
+</div>
