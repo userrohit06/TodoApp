@@ -17,16 +17,16 @@
       name="password"
       [(ngModel)]="model.password"
       required
-      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-s-teal-600 dark:bg-slate-900"
+      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-900"
     />
   </div>
 
   <button
     type="submit"
-    [disabled]="isLoading || f.invalid"
+    [disabled]="isLoading() || f.invalid"
     class="inline-flex w-full items-center justify-center rounded-full bg-indigo-500 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-600 disabled:opacity-50"
   >
-    {{ isLoading ? 'Signing in...' : 'Sign in' }}
+    {{ isLoading() ? 'Signing in...' : 'Sign in' }}
   </button>
 
   <p class="text-xs text-slate-500 dark:text-slate-400">
@@ -34,5 +34,5 @@
     <a routerLink="/auth/register" class="text-indigo-500 hover:underline">Register</a>
   </p>
 
-  <p *ngIf="error" class="text-xs text-red-500">{{ error }}</p>
+  <p *ngIf="error" class="text-xs text-red-500">{{ error() }}</p>
 </form>

@@ -1,1 +1,41 @@
-<p>todo-create works!</p>
+<div
+  class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800"
+>
+  <h2 class="mb-4 text-lg font-semibold">Create Todo</h2>
+
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)" class="space-y-4">
+    <div>
+      <label class="block text-sm font-medium mb-1">Title</label>
+      <input
+        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-900"
+        type="text"
+        name="title"
+        [(ngModel)]="model.title"
+        required
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium mb-1">Description</label>
+      <textarea
+        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-900"
+        name="description"
+        rows="3"
+        [(ngModel)]="model.description"
+      >
+      </textarea>
+    </div>
+
+    <button
+      class="inline-flex items-center rounded-full bg-indigo-500 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-600 disabled:opacity-50"
+      type="submit"
+      [disabled]="isLoading() || f.invalid"
+    >
+      {{ isLoading() ? 'Saving...' : 'Create' }}
+    </button>
+
+    @if(error()){
+    <p class="text-xs text-red-500">{{ error() }}</p>
+    }
+  </form>
+</div>

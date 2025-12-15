@@ -1,5 +1,5 @@
 import { CommonModule, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../../core/services/auth';
@@ -16,25 +16,25 @@ export class Login {
     password: '',
   };
 
-  isLoading = false;
-  error: string | null = null;
+  isLoading = signal(false);
+  error = signal<string | null>(null);
 
   constructor(private authService: Auth, private router: Router) {}
 
   onSubmit(form: NgForm) {
     if (form.invalid) return;
 
-    this.isLoading = true;
-    this.error = null;
+    this.isLoading.set(true);
+    this.error.set(null);
 
     this.authService.login(this.model).subscribe({
       next: () => {
-        this.isLoading = false;
+        this.isLoading.set(false);
         this.router.navigate(['/todos']);
       },
       error: (err) => {
-        this.isLoading = false;
-        this.error = err.error?.message ?? 'Login failed';
+        this.isLoading.set(false);
+        this.error.set(err.error?.message ?? 'Login failed');
       },
     });
   }

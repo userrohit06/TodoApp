@@ -16,7 +16,16 @@ interface LoginRequest {
   password: string;
 }
 
-type AuthResponse = ApiRespone<string>;
+interface LoginData {
+  userId: number;
+  name: string;
+  email: string;
+  isActive: boolean;
+  createdOn: string;
+  token: string;
+}
+
+type AuthResponse = ApiRespone<LoginData>;
 
 @Injectable({
   providedIn: 'root',
@@ -34,17 +43,13 @@ export class Auth {
     return this.http.post<AuthResponse>(`${this.baseUrl}/login`, body).pipe(
       tap((res) => {
         if (res.data) {
-          this.tokenStorage.setToken(res.data);
+          this.tokenStorage.setToken(res.data.token);
         }
       })
     );
   }
 
-  logout(): Observable<ApiRespone<null>> {
-    return this.http.post<ApiRespone<null>>(`${this.baseUrl}/logout`, {}).pipe(
-      tap(() => {
-        this.tokenStorage.clearToken();
-      })
-    );
+  logout() {
+    this.tokenStorage.clearToken();
   }
 }

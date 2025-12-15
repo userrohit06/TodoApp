@@ -11,12 +11,21 @@
     </a>
   </div>
 
-  <div *ngIf="isLoading">Loading...</div>
-  <div *ngIf="error" class="text-sm text-red-500">{{ error }}</div>
+  <!-- loading -->
+  @if(isLoading()){
+  <div>Loading...</div>
+  }
 
-  <ul *ngIf="!isLoading && !error && todos.length" class="space-y-3">
+  <!-- error -->
+  @if(!isLoading() && error()){
+  <div class="text-sm text-red-500">{{ error() }}</div>
+  }
+
+  <!-- list -->
+  @if(!isLoading() && !error() && todos().length){
+  <ul class="space-y-3">
+    @for (todo of todos(); track todo.todoId){
     <li
-      *ngFor="let todo of todos"
       class="flex items-start justify-between rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900"
     >
       <div>
@@ -32,6 +41,30 @@
           {{ todo.description || 'No Description' }}
         </p>
       </div>
+
+      <div class="flex flex-col items-end gap-1 text-xs">
+        <span class="text-slate-400">
+          {{ todo.createdOn | date : 'short' }}
+        </span>
+
+        <span
+          class="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium"
+          [ngClass]="
+            todo.isCompleted
+              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-200'
+              : 'bg-amber-100 text-amber-700 dark:bg-amber-900/60 dark:text-amber-200'
+          "
+        >
+          {{ todo.isCompleted ? 'Done' : 'Open' }}
+        </span>
+      </div>
     </li>
+    }
   </ul>
+  }
+
+  <!-- empty state -->
+  @if(!isLoading() && !error() && !todos().length){
+  <p class="text-sm text-slate-500">No todos yet. Create your first now!</p>
+  }
 </div>

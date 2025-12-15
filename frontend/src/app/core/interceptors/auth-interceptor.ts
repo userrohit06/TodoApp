@@ -5,6 +5,7 @@ import { TokenStorage } from '../services/token-storage';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const tokenStorage = inject(TokenStorage);
   const token = tokenStorage.getToken();
+  console.log('token:', token);
 
   if (!token) {
     return next(req);
