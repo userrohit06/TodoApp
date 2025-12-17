@@ -1,1 +1,70 @@
-<p>todo-list works!</p>
+<div
+  class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800"
+>
+  <div class="mb-4 flex items-center justify-between">
+    <h2 class="text-lg font-semibold">Your todos</h2>
+    <a
+      routerLink="/todos/create"
+      class="inline-flex items-center rounded-full bg-indigo-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-indigo-600"
+    >
+      + New Todo
+    </a>
+  </div>
+
+  <!-- loading -->
+  @if(isLoading()){
+  <div>Loading...</div>
+  }
+
+  <!-- error -->
+  @if(!isLoading() && error()){
+  <div class="text-sm text-red-500">{{ error() }}</div>
+  }
+
+  <!-- list -->
+  @if(!isLoading() && !error() && todos().length){
+  <ul class="space-y-3">
+    @for (todo of todos(); track todo.todoId){
+    <li
+      class="flex items-start justify-between rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900"
+    >
+      <div>
+        <h3
+          class="text-sm font-medium"
+          [class.line-through]="todo.isCompleted"
+          [class.text-slate-400]="todo.isCompleted"
+        >
+          {{ todo.title }}
+        </h3>
+
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+          {{ todo.description || 'No Description' }}
+        </p>
+      </div>
+
+      <div class="flex flex-col items-end gap-1 text-xs">
+        <span class="text-slate-400">
+          {{ todo.createdOn | date : 'short' }}
+        </span>
+
+        <span
+          class="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium"
+          [ngClass]="
+            todo.isCompleted
+              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-200'
+              : 'bg-amber-100 text-amber-700 dark:bg-amber-900/60 dark:text-amber-200'
+          "
+        >
+          {{ todo.isCompleted ? 'Done' : 'Open' }}
+        </span>
+      </div>
+    </li>
+    }
+  </ul>
+  }
+
+  <!-- empty state -->
+  @if(!isLoading() && !error() && !todos().length){
+  <p class="text-sm text-slate-500">No todos yet. Create your first now!</p>
+  }
+</div>

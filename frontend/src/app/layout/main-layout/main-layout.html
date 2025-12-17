@@ -1,1 +1,38 @@
-<p>main-layout works!</p>
+<div class="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
+  <header
+    class="mx-auto max-w-5xl rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-800/80"
+  >
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div class="h-2.5 w-2.5 rounded-full bg-indigo-500"></div>
+        <span class="text-sm font-semibold tracking-tight">Todo Dashboard</span>
+
+        <nav class="ml-4 flex gap-3 text-sm text-slate-500 dark:text-slate-400">
+          <a routerLink="/todos" routerLinkActive="text-indigo-500 dark:text-indigo-400 font-medium"
+            >Todos</a
+          >
+        </nav>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button
+          (click)="toggleTheme()"
+          class="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 text-sm hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
+        >
+          🌓
+        </button>
+
+        <button
+          (click)="onLogout()"
+          class="inline-flex items-center rounded-full bg-indigo-500 px-4 py-1.5 text-sm font-medium text-white hover:bg-indigo-600"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto mt-6 max-w-5xl px-4 pb-10">
+    <router-outlet></router-outlet>
+  </main>
+</div>
