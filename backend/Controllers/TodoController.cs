@@ -59,5 +59,23 @@ namespace backend.Controllers
             var result = await this._todoService.GetTodoList(userId);
             return StatusCode(result.Status, result);
         }
+
+        [HttpPost("complete-task")]
+        public async Task<ActionResult<ApiResponse<bool>>> CompleteTask(int todoId)
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            if(!int.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Status = 401,
+                    Message = "Invalid token",
+                    Data = null
+                });
+
+            }
+            var result = await this._todoService.UpdateStatus(userId, todoId);
+            return StatusCode(result.Status, result);
+        }
     }
 }

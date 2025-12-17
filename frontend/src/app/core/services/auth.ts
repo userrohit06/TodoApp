@@ -52,4 +52,17 @@ export class Auth {
   logout() {
     this.tokenStorage.clearToken();
   }
+
+  isAuthenticated(): boolean {
+    const token = this.tokenStorage.getToken();
+    if (!token) return false;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expMs = (payload?.exp ?? 0) * 1000;
+      return Date.now() < expMs;
+    } catch (error) {
+      return false;
+    }
+  }
 }

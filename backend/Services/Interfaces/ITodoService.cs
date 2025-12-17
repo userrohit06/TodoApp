@@ -7,5 +7,6 @@ namespace backend.Services.Interfaces
     {
         Task<ApiResponse<TodoResponse>> CreateTodo(int userId, CreateTodoRequest request);
         Task<ApiResponse<List<TodoResponse>>> GetTodoList(int userId);
+        Task<ApiResponse<bool>> UpdateStatus(int userId, int todoId);
     }
 }

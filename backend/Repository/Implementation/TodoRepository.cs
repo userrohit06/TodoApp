@@ -45,12 +45,24 @@ namespace backend.Repository.Implementation
             return createdTodo;
         }
 
+        public async Task<Todo?> GetTodoById(int todoId)
+        {
+            return await this._dbContext.Todos
+                .Where(todo => todo.TodoId == todoId)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<List<Todo>> GetTodosByUserId(int userId)
         {
             return await this._dbContext.Todos
                 .AsNoTracking()
                 .Where(t => t.UserId == userId)
                 .ToListAsync();
+        }
+
+        public Task<int> SaveChanges()
+        {
+            return this._dbContext.SaveChangesAsync();
         }
     }
 }

@@ -86,5 +86,35 @@ namespace backend.Services
                 return response;
             }
         }
+
+        public async Task<ApiResponse<bool>> UpdateStatus(int userId, int todoId)
+        {
+            var response = new ApiResponse<bool>();
+
+            try
+            {
+                var todo = await _todoRepo.GetTodoById(todoId);
+                if(todo == null)
+                {
+                    response.Status = 404;
+                    response.Message = "Todo not found";
+                    return response;
+                }
+
+                todo.IsCompleted = true;
+                var affected = await this._todoRepo.SaveChanges();
+
+                response.Status = 200;
+                response.Message = "Task completed successfully";
+                response.Data = affected > 0;
+                return response;
+            }
+            catch (Exception)
+            {
+                response.Status = 500;
+                response.Message = "Unexpected error occured completing task";
+                return response;
+            }
+        }
     }
 }
